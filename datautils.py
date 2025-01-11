@@ -53,11 +53,14 @@ def get_ptb(nsamples, seqlen, tokenizer, eval_mode=False):
 
 def get_c4(nsamples, seqlen, tokenizer, eval_mode=False):
     if not eval_mode:
+        # Use direct path to local files
         traindata = load_dataset(
             "allenai/c4",
             "en",
-            split="train",
-            cache_dir="/data/datasets--allenai--c4"  # Changed to your blob path
+            data_files={
+                "train": "/data/allenai___c4/en/0.0.0/1588ec454efa1a09f29cd18ddd04fe05fc8653a2/cache-*.arrow"
+            },
+            cache_dir="/data/allenai___c4"
         )
         trainloader = []
         for _ in range(nsamples):
