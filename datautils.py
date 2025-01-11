@@ -53,13 +53,11 @@ def get_ptb(nsamples, seqlen, tokenizer, eval_mode=False):
 
 def get_c4(nsamples, seqlen, tokenizer, eval_mode=False):
     if not eval_mode:
-        # Use local cached dataset
         traindata = load_dataset(
             "allenai/c4",
             "en",
             split="train",
-            data_dir="/data/allenai___c4/",  # Point to our local cache
-            cache_dir="/data/allenai___c4/"   # Point to our local cache
+            cache_dir="/data/datasets--allenai--c4"  # Changed to your blob path
         )
         trainloader = []
         for _ in range(nsamples):
@@ -80,8 +78,7 @@ def get_c4(nsamples, seqlen, tokenizer, eval_mode=False):
             "allenai/c4",
             "en",
             split="validation",
-            data_dir="/data/allenai___c4/",  # Point to our local cache
-            cache_dir="/data/allenai___c4/"   # Point to our local cache
+            cache_dir="/data/datasets--allenai--c4"  # Changed to your blob path
         )
         random.seed(0)
         valenc = []
