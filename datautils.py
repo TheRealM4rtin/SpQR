@@ -53,8 +53,13 @@ def get_ptb(nsamples, seqlen, tokenizer, eval_mode=False):
 
 def get_c4(nsamples, seqlen, tokenizer, eval_mode=False):
     if not eval_mode:
+        # Use local cached dataset
         traindata = load_dataset(
-            "allenai/c4", "allenai--c4", data_files={"train": "en/c4-train.00000-of-01024.json.gz"}, split="train"
+            "allenai/c4",
+            "en",
+            split="train",
+            data_dir="/data/allenai___c4/",  # Point to our local cache
+            cache_dir="/data/allenai___c4/"   # Point to our local cache
         )
         trainloader = []
         for _ in range(nsamples):
@@ -70,13 +75,13 @@ def get_c4(nsamples, seqlen, tokenizer, eval_mode=False):
             tar[:, :-1] = -100
             trainloader.append((inp, tar))
         return trainloader
-
     else:
         valdata = load_dataset(
             "allenai/c4",
-            "allenai--c4",
-            data_files={"validation": "en/c4-validation.00000-of-00008.json.gz"},
+            "en",
             split="validation",
+            data_dir="/data/allenai___c4/",  # Point to our local cache
+            cache_dir="/data/allenai___c4/"   # Point to our local cache
         )
         random.seed(0)
         valenc = []
@@ -87,7 +92,6 @@ def get_c4(nsamples, seqlen, tokenizer, eval_mode=False):
                 if tmp.input_ids.shape[1] >= seqlen:
                     break
             if tmp.input_ids.shape[1] == seqlen:
-                # rare case, discovered with Yi tokenizer
                 valenc.append(tmp.input_ids)
             else:
                 i = random.randint(0, tmp.input_ids.shape[1] - seqlen - 1)
